@@ -2,3 +2,4 @@
 build
 test_tracks
 outputs
+compile_commands.json
