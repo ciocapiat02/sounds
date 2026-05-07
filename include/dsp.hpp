@@ -86,6 +86,28 @@ namespace dsp {
         std::cout << "low pass loop elapsed time: " << elapsed.count() << " ms" << std::endl;
         return output;
     }
+
+    template<typename T>
+    std::vector<T> firFilter(std::vector<T> input, std::vector<T> coefficients){
+        std::vector<T> output(input.size());
+        auto start = std::chrono::high_resolution_clock::now();
+#pragma omp parallel for
+        for(auto i = 0; i<input.size(); i+=1){
+            T sum0 = 0.0f;
+            for(auto j = 0; j < coefficients.size(); j+=4){
+                sum0 += input[i+j] * coefficients[j] +
+                            input[i+j+1] * coefficients[j+1]+
+                            input[i+j+2] * coefficients[j+2]+
+                            input[i+j+3] * coefficients[j+3];
+            }
+            output[i] = sum0;
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::cout << "fir filter elapsed time: " << elapsed.count() << " ms" << std::endl;
+        return output;
+    }
+
 }
 
 #endif //DSP_HPP
