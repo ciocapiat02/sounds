@@ -33,8 +33,9 @@ int main(int argc, char* argv[]) {
 
     drwav_uninit(&wav_in); // Done with the input file
 
-
-    samples = dsp::distortion<float>(samples, -0.5, 0.5);
+    // samples = dsp::distortion<float>(samples, -0.5, 0.5);
+    // samples = dsp::slow_low_pass<float>(samples, 5);
+    samples = dsp::fast_low_pass<float>(samples, 0.1);
     samples = dsp::normalization<float>(samples);
 
 
