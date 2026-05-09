@@ -17,7 +17,8 @@ find_package(OpenMP REQUIRED)
 include_directories(include)
 
 add_executable(${PROJECT_NAME}
-    src/main.cpp)
+    src/main.cpp
+    src/oscillator.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${RTAUDIO_INCLUDE_DIRS})
