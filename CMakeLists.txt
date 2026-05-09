@@ -9,6 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O2")
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(RTAUDIO REQUIRED rtaudio)
+
 find_package(OpenMP REQUIRED)
 
 include_directories(include)
@@ -16,6 +19,10 @@ include_directories(include)
 add_executable(${PROJECT_NAME}
     src/main.cpp)
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${RTAUDIO_INCLUDE_DIRS})
+
 target_link_libraries(${PROJECT_NAME}
-    OpenMP::OpenMP_CXX)
+    OpenMP::OpenMP_CXX
+    ${RTAUDIO_LIBRARIES})
 
