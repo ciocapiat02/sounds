@@ -1,6 +1,7 @@
 #ifndef DSP_HPP
 #define DSP_HPP
 
+#include <queue>
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -94,20 +95,22 @@ namespace dsp {
 #pragma omp parallel for
         for(auto i = 0; i<input.size(); i+=1){
             T sum0 = 0.0f;
-            for(auto j = 0; j < coefficients.size(); j+=4){
-                sum0 += input[i+j] * coefficients[j] +
-                            input[i+j+1] * coefficients[j+1]+
-                            input[i+j+2] * coefficients[j+2]+
-                            input[i+j+3] * coefficients[j+3];
+            for(auto j = 4; j < coefficients.size(); j+=4){
+                sum0 += input[i-j] * coefficients[j] +
+                            input[i-j-1] * coefficients[j-1]+
+                            input[i-j-2] * coefficients[j-2]+
+                            input[i-j-3] * coefficients[j-3];
             }
             output[i] = sum0;
+            // if((i%10000)==0){
+            //     // std::cout << "sample " << i << "/" << input.size() << std::endl;
+            // }
         }
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> elapsed = end - start;
         std::cout << "fir filter elapsed time: " << elapsed.count() << " ms" << std::endl;
         return output;
     }
-
 }
 
 #endif //DSP_HPP
